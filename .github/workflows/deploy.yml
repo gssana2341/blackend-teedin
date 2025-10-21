@@ -32,7 +32,7 @@ jobs:
       - name: Build project
         run: npm run build
 
-      - name: Setup SSH
+       - name: Setup SSH
         env:
           SSH_PRIVATE_KEY: ${{ secrets.SERVER_SSH_KEY }}
         run: |
@@ -73,4 +73,4 @@ jobs:
             
             echo ">>> Deployment completed!"
             echo "🎉 API is available at: http://34.158.61.147:3001"
-          ENDSSH
+ENDSSH
