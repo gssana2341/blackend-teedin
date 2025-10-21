@@ -32,19 +32,19 @@ jobs:
       - name: Build project
         run: npm run build
 
-      - name: Deploy to Server
+      - name: Setup SSH
         env:
           SSH_PRIVATE_KEY: ${{ secrets.SERVER_SSH_KEY }}
         run: |
-          # Setup SSH
           mkdir -p ~/.ssh
           echo "$SSH_PRIVATE_KEY" > ~/.ssh/deploy_key
           chmod 600 ~/.ssh/deploy_key
           ssh-keyscan -H 34.158.61.147 >> ~/.ssh/known_hosts
 
-          # Deploy on server
+      - name: Deploy to Server
+        run: |
           echo ">>> Connecting to server and deploying..."
-          ssh -i ~/.ssh/deploy_key teedineasy_team@34.158.61.147 << 'EOF'
+          ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no teedineasy_team@34.158.61.147 << 'ENDSSH'
             set -e
             
             echo ">>> Navigating to project directory..."
@@ -73,4 +73,4 @@ jobs:
             
             echo ">>> Deployment completed!"
             echo "🎉 API is available at: http://34.158.61.147:3001"
-          EOF
+          ENDSSH
