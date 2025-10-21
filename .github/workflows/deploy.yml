@@ -32,14 +32,16 @@ jobs:
       - name: Build project
         run: npm run build
 
-      - name: Setup SSH Key
-        run: |
-          mkdir -p $HOME/.ssh
-          echo "${{ secrets.SERVER_SSH_KEY }}" > $HOME/.ssh/deploy_key
-          chmod 600 $HOME/.ssh/deploy_key
-          ssh-keyscan -H 34.158.61.147 >> $HOME/.ssh/known_hosts
-          ls -la $HOME/.ssh/
-          cat $HOME/.ssh/deploy_key | head -n 1
+      - name: Upload code to server
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: 34.158.61.147
+          username: teedineasy_team
+          key: ${{ secrets.SERVER_SSH_KEY }}
+          source: ".,!node_modules,!.git,!dist"
+          target: ~/teedin-backend/
+          overwrite: true
+          strip_components: 1
 
       - name: Deploy to server via SSH
         uses: appleboy/ssh-action@v1.0.0
@@ -55,17 +57,7 @@ jobs:
             set -e
 
             echo ">>> Navigating to project directory..."
-            cd $HOME/teedin-backend || {
-              echo "❌ Directory $HOME/teedin-backend not found!"
-              echo "Please clone the repository first:"
-              echo "git clone https://github.com/gssana2341/blackend-teedin.git $HOME/teedin-backend"
-              exit 1
-            }
-
-            echo ">>> Pulling latest code..."
-            git pull origin main || {
-              echo "⚠️  Git pull failed, continuing with existing code..."
-            }
+            cd $HOME/teedin-backend
 
             echo ">>> Creating .env.production if not exists..."
             if [ ! -f ".env.production" ]; then
