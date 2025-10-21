@@ -50,6 +50,10 @@ jobs:
             echo ">>> Navigating to project directory..."
             cd $HOME/teedin-backend
             
+            echo ">>> Resetting local changes..."
+            git reset --hard HEAD
+            git clean -fd
+            
             echo ">>> Pulling latest code from GitHub..."
             git pull origin main
             
