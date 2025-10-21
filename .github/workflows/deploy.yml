@@ -34,17 +34,19 @@ jobs:
 
       - name: Setup SSH Key
         run: |
-          mkdir -p ~/.ssh
-          echo "${{ secrets.SERVER_SSH_KEY }}" > ~/.ssh/deploy_key
-          chmod 600 ~/.ssh/deploy_key
-          ssh-keyscan -H 34.158.61.147 >> ~/.ssh/known_hosts
+          mkdir -p $HOME/.ssh
+          echo "${{ secrets.SERVER_SSH_KEY }}" > $HOME/.ssh/deploy_key
+          chmod 600 $HOME/.ssh/deploy_key
+          ssh-keyscan -H 34.158.61.147 >> $HOME/.ssh/known_hosts
+          ls -la $HOME/.ssh/
+          cat $HOME/.ssh/deploy_key | head -n 1
 
       - name: Deploy to server via SSH
         uses: appleboy/ssh-action@v1.0.0
         with:
           host: 34.158.61.147
           username: teedineasy_team
-          key_path: /home/runner/.ssh/deploy_key
+          key: ${{ secrets.SERVER_SSH_KEY }}
           port: 22
           timeout: 60s
           command_timeout: 10m
