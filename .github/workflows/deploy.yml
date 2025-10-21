@@ -6,6 +6,9 @@ on:
   pull_request:
     branches: [main]
 
+permissions:
+  contents: read
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
@@ -14,6 +17,8 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -27,46 +32,50 @@ jobs:
       - name: Build project
         run: npm run build
 
-      - name: Deploy to server
+      - name: Deploy to server via SSH
         uses: appleboy/ssh-action@v1.0.0
         with:
           host: 34.158.61.147
-          username: teedineasy_team
+          username: gassana2341
           key: ${{ secrets.SERVER_SSH_KEY }}
           port: 22
           timeout: 60s
           command_timeout: 10m
           debug: true
+          script_stop: true
           script: |
-            # Navigate to project directory
-            cd ~/teedin-backend || git clone https://github.com/gssana2341/blackend-teedin.git teedin-backend
-            cd teedin-backend
+            set -e
 
-            # Pull latest changes
-            git pull origin main
+            echo ">>> Navigating to backend folder..."
+            if [ ! -d "~/teedin-backend" ]; then
+              git clone https://github.com/gssana2341/blackend-teedin.git ~/teedin-backend
+            fi
+            cd ~/teedin-backend
 
-            # Install Docker if not installed
+            echo ">>> Pulling latest code..."
+            git fetch origin main
+            git reset --hard origin/main
+
+            echo ">>> Checking Docker installation..."
             if ! command -v docker &> /dev/null; then
               curl -fsSL https://get.docker.com -o get-docker.sh
               sudo sh get-docker.sh
               sudo usermod -aG docker $USER
             fi
 
-            # Install Docker Compose if not installed
+            echo ">>> Checking Docker Compose installation..."
             if ! command -v docker-compose &> /dev/null; then
               sudo curl -L "https://github.com/docker/compose/releases/latest/download/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
               sudo chmod +x /usr/local/bin/docker-compose
             fi
 
-            # Stop existing containers
-            docker-compose -f docker-compose.prod.yml down || true
+            echo ">>> Restarting containers..."
+            sudo docker-compose -f docker-compose.prod.yml down || true
+            sudo docker-compose -f docker-compose.prod.yml build --no-cache
+            sudo docker-compose -f docker-compose.prod.yml up -d
 
-            # Build and start with Docker Compose
-            docker-compose -f docker-compose.prod.yml build --no-cache
-            docker-compose -f docker-compose.prod.yml up -d
-
-            # Wait for services to be healthy
+            echo ">>> Waiting for services to start..."
             sleep 30
 
-            # Check if services are running
-            docker-compose -f docker-compose.prod.yml ps
+            echo ">>> Checking container status..."
+            sudo docker-compose -f docker-compose.prod.yml ps
