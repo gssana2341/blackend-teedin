@@ -54,39 +54,23 @@ jobs:
           script: |
             set -e
 
-            echo ">>> Checking Git installation..."
-            if ! command -v git &> /dev/null; then
-              echo "❌ Git is not installed. Please install Git first:"
-              echo "Run: sudo apt update && sudo apt install -y git"
+            echo ">>> Navigating to project directory..."
+            cd $HOME/teedin-backend || {
+              echo "❌ Directory $HOME/teedin-backend not found!"
+              echo "Please clone the repository first:"
+              echo "git clone https://github.com/gssana2341/blackend-teedin.git $HOME/teedin-backend"
               exit 1
-            fi
-
-            echo ">>> Navigating to backend folder..."
-            if [ ! -d "$HOME/teedin-backend" ]; then
-              git clone https://github.com/gssana2341/blackend-teedin.git $HOME/teedin-backend
-            fi
-            cd $HOME/teedin-backend
+            }
 
             echo ">>> Pulling latest code..."
-            git fetch origin main
-            git reset --hard origin/main
-
-            echo ">>> Checking Docker installation..."
-            if ! command -v docker &> /dev/null; then
-              echo "❌ Docker is not installed. Please install Docker first."
-              exit 1
-            fi
-
-            echo ">>> Checking Docker Compose installation..."
-            if ! command -v docker-compose &> /dev/null; then
-              echo "❌ Docker Compose is not installed. Please install Docker Compose first."
-              exit 1
-            fi
+            git pull origin main || {
+              echo "⚠️  Git pull failed, continuing with existing code..."
+            }
 
             echo ">>> Creating .env.production if not exists..."
             if [ ! -f ".env.production" ]; then
               cp env.production.example .env.production
-              echo "⚠️  Please update .env.production with your actual values!"
+              echo "⚠️  Created .env.production - Please update with your actual values!"
             fi
 
             echo ">>> Stopping existing containers..."
