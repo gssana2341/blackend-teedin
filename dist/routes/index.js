@@ -1,0 +1,30 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.router = void 0;
+const express_1 = require("express");
+const properties_1 = require("./properties");
+const auth_1 = require("./auth");
+const admin_1 = require("./admin");
+const utils_1 = require("./utils");
+const appointments_1 = require("./appointments");
+const listings_1 = require("./listings");
+const negotiations_1 = require("./negotiations");
+const notifications_1 = require("./notifications");
+const database_1 = require("./database");
+const testing_1 = require("./testing");
+const users_1 = require("./users");
+const router = (0, express_1.Router)();
+exports.router = router;
+// Mount sub-routes
+router.use('/properties', properties_1.propertiesRouter);
+router.use('/auth', auth_1.authRouter);
+router.use('/admin', admin_1.adminRouter);
+router.use('/appointments', appointments_1.appointmentsRouter);
+router.use('/listings', listings_1.listingsRouter);
+router.use('/negotiations', negotiations_1.negotiationsRouter);
+router.use('/notifications', notifications_1.notificationsRouter);
+router.use('/database', database_1.databaseRouter);
+router.use('/testing', testing_1.testingRouter);
+router.use('/users', users_1.usersRouter);
+router.use('/', utils_1.utilsRouter);
+//# sourceMappingURL=index.js.map

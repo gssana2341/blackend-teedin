@@ -1,0 +1,43 @@
+{
+  "id": "teedin-backend-env",
+  "name": "Teedin Backend Environment",
+  "values": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:3001",
+      "enabled": true,
+      "type": "default"
+    },
+    {
+      "key": "authToken",
+      "value": "",
+      "enabled": true,
+      "type": "secret"
+    },
+    {
+      "key": "userId",
+      "value": "user-id-here",
+      "enabled": true,
+      "type": "default"
+    },
+    {
+      "key": "agentId",
+      "value": "e73c79cf-251f-43c0-9f63-7070d168f47d",
+      "enabled": true,
+      "type": "default"
+    },
+    {
+      "key": "propertyId",
+      "value": "43e0c145-61bf-43e0-8d6d-c9cc1aa29b14",
+      "enabled": true,
+      "type": "default"
+    },
+    {
+      "key": "notificationId",
+      "value": "notification-id-here",
+      "enabled": true,
+      "type": "default"
+    }
+  ],
+  "_postman_variable_scope": "environment"
+}

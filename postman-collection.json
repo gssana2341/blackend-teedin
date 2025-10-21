@@ -1,0 +1,884 @@
+{
+  "info": {
+    "name": "Teedin Backend API",
+    "description": "Complete API collection for Teedin Real Estate Platform Backend",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:3001",
+      "type": "string"
+    },
+    {
+      "key": "authToken",
+      "value": "",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "Health Check",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/health",
+          "host": ["{{baseUrl}}"],
+          "path": ["health"]
+        }
+      }
+    },
+    {
+      "name": "Get API Info",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/",
+          "host": ["{{baseUrl}}"],
+          "path": [""]
+        }
+      }
+    },
+    {
+      "name": "Authentication",
+      "item": [
+        {
+          "name": "Get Current User",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/me",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "auth", "me"]
+            }
+          }
+        },
+        {
+          "name": "Logout User",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/logout",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "auth", "logout"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Properties",
+      "item": [
+        {
+          "name": "Get All Properties",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/properties",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "properties"]
+            }
+          }
+        },
+        {
+          "name": "Get Property by ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/properties/43e0c145-61bf-43e0-8d6d-c9cc1aa29b14",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "properties", "43e0c145-61bf-43e0-8d6d-c9cc1aa29b14"]
+            }
+          }
+        },
+        {
+          "name": "Get Similar Properties",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/properties/similar?location=Bangkok&limit=5",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "properties", "similar"],
+              "query": [
+                {
+                  "key": "location",
+                  "value": "Bangkok"
+                },
+                {
+                  "key": "limit",
+                  "value": "5"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Create Property",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"agentId\": \"e73c79cf-251f-43c0-9f63-7070d168f47d\",\n  \"propertyData\": {\n    \"listing_type\": [\"sale\"],\n    \"property_category\": \"บ้านเดี่ยว\",\n    \"in_project\": false,\n    \"rental_duration\": null,\n    \"location\": {\n      \"district\": \"บางรัก\",\n      \"province\": \"กรุงเทพมหานคร\"\n    }\n  },\n  \"propertyDetails\": {\n    \"project_name\": \"บ้านสวยใจกลางเมือง\",\n    \"address\": \"123 ถนนสุขุมวิท กรุงเทพฯ\",\n    \"usable_area\": 150,\n    \"bedrooms\": 3,\n    \"bathrooms\": 2,\n    \"parking_spaces\": 1,\n    \"house_condition\": \"ใหม่\",\n    \"highlight\": \"ใกล้ BTS\",\n    \"area_around\": \"ใกล้สถานีรถไฟฟ้า\",\n    \"facilities\": [\"สระว่ายน้ำ\", \"ฟิตเนส\"],\n    \"project_facilities\": [\"ลิฟต์\", \"ที่จอดรถ\"],\n    \"description\": \"บ้านสวยใจกลางเมือง ใกล้ BTS\",\n    \"price\": 5000000,\n    \"images\": [\"image1.jpg\", \"image2.jpg\"],\n    \"latitude\": 13.7563,\n    \"longitude\": 100.5018\n  }\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/properties/create",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "properties", "create"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Admin",
+      "item": [
+        {
+          "name": "Get Dashboard Stats",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/admin/dashboard",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "admin", "dashboard"]
+            }
+          }
+        },
+        {
+          "name": "Get All Users",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/admin/users?page=1&limit=10",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "admin", "users"],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "10"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Admin Properties",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/admin/properties?page=1&limit=10",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "admin", "properties"],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "10"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Admin Agents",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/admin/agents?status=all&page=1&limit=10",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "admin", "agents"],
+              "query": [
+                {
+                  "key": "status",
+                  "value": "all"
+                },
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "10"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Approve/Reject Agent",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"agentUserId\": \"user-id-here\",\n  \"status\": \"approved\",\n  \"rejectionReason\": null\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/admin/agents",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "admin", "agents"]
+            }
+          }
+        },
+        {
+          "name": "Get Admin Announcements",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/admin/announcements?status=all&page=1&limit=10",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "admin", "announcements"],
+              "query": [
+                {
+                  "key": "status",
+                  "value": "all"
+                },
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "10"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Create Announcement",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"ประกาศสำคัญ\",\n  \"content\": \"เนื้อหาประกาศ\",\n  \"type\": \"general\",\n  \"status\": \"published\",\n  \"target_audience\": \"all\",\n  \"start_date\": \"2024-01-01T00:00:00Z\",\n  \"end_date\": \"2024-12-31T23:59:59Z\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/admin/announcements",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "admin", "announcements"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Appointments",
+      "item": [
+        {
+          "name": "Get Appointments",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/appointments?limit=10",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "appointments"],
+              "query": [
+                {
+                  "key": "limit",
+                  "value": "10"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Create Appointment",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"property_id\": \"43e0c145-61bf-43e0-8d6d-c9cc1aa29b14\",\n  \"appointment_date\": \"2024-01-15T14:00:00Z\",\n  \"notes\": \"ต้องการดูบ้านในช่วงบ่าย\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/appointments",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "appointments"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Listings",
+      "item": [
+        {
+          "name": "Get My Listings",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/listings/my-listings?agentId=e73c79cf-251f-43c0-9f63-7070d168f47d&search=",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "listings", "my-listings"],
+              "query": [
+                {
+                  "key": "agentId",
+                  "value": "e73c79cf-251f-43c0-9f63-7070d168f47d"
+                },
+                {
+                  "key": "search",
+                  "value": ""
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Negotiations",
+      "item": [
+        {
+          "name": "Get Price Negotiations",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/negotiations/price-negotiations?limit=10",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "negotiations", "price-negotiations"],
+              "query": [
+                {
+                  "key": "limit",
+                  "value": "10"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Create Price Negotiation",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"property_id\": \"43e0c145-61bf-43e0-8d6d-c9cc1aa29b14\",\n  \"original_price\": 5000000,\n  \"offered_price\": 4500000,\n  \"negotiation_reason\": \"งบประมาณจำกัด\",\n  \"customer_name\": \"สมชาย ใจดี\",\n  \"customer_phone\": \"0812345678\",\n  \"customer_email\": \"somchai@example.com\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/negotiations/price-negotiations",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "negotiations", "price-negotiations"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Notifications",
+      "item": [
+        {
+          "name": "Get Notifications",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/notifications?user_id=user-id&limit=10",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "notifications"],
+              "query": [
+                {
+                  "key": "user_id",
+                  "value": "user-id"
+                },
+                {
+                  "key": "limit",
+                  "value": "10"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Mark Notification as Read",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"notification_id\": \"notification-id-here\",\n  \"user_id\": \"user-id-here\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/notifications/read",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "notifications", "read"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Users",
+      "item": [
+        {
+          "name": "Get User by ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/users/user-id-here",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "users", "user-id-here"]
+            }
+          }
+        },
+        {
+          "name": "Update User Role",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"user_id\": \"user-id-here\",\n  \"new_role\": \"agent\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/users/update-role",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "users", "update-role"]
+            }
+          }
+        },
+        {
+          "name": "Check User Exists",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"user@example.com\",\n  \"phone\": \"0812345678\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/users/check-exists",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "users", "check-exists"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Database",
+      "item": [
+        {
+          "name": "Test Database Connection",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/database/test-connection",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "database", "test-connection"]
+            }
+          }
+        },
+        {
+          "name": "Create Tables",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/database/create-tables",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "database", "create-tables"]
+            }
+          }
+        },
+        {
+          "name": "Create OTP Tables",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/database/create-otp-tables",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "database", "create-otp-tables"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Testing & Diagnostics",
+      "item": [
+        {
+          "name": "Test SMTP",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/testing/test-smtp",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "testing", "test-smtp"]
+            }
+          }
+        },
+        {
+          "name": "Test Twilio SMS",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/testing/test-twilio",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "testing", "test-twilio"]
+            }
+          }
+        },
+        {
+          "name": "Test Resend Email",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/testing/test-resend",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "testing", "test-resend"]
+            }
+          }
+        },
+        {
+          "name": "Email Diagnostics",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/testing/email-diagnostics",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "testing", "email-diagnostics"]
+            }
+          }
+        },
+        {
+          "name": "SMS Diagnostics",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/testing/sms-diagnostics",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "testing", "sms-diagnostics"]
+            }
+          }
+        },
+        {
+          "name": "Debug Notifications",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/testing/debug-notifications",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "testing", "debug-notifications"]
+            }
+          }
+        },
+        {
+          "name": "Debug Properties",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/testing/debug-properties",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "testing", "debug-properties"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Utilities",
+      "item": [
+        {
+          "name": "Send OTP Email",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"user@example.com\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/send-otp",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "send-otp"]
+            }
+          }
+        },
+        {
+          "name": "Send OTP SMS",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"phone\": \"0812345678\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/send-otp-sms",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "send-otp-sms"]
+            }
+          }
+        },
+        {
+          "name": "Verify OTP",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"user@example.com\",\n  \"code\": \"123456\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/verify-otp",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "verify-otp"]
+            }
+          }
+        },
+        {
+          "name": "Reset Password",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"user@example.com\",\n  \"newPassword\": \"newpassword123\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/reset-password",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "reset-password"]
+            }
+          }
+        },
+        {
+          "name": "Track Property View",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"propertyId\": \"43e0c145-61bf-43e0-8d6d-c9cc1aa29b14\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/track-view",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "track-view"]
+            }
+          }
+        },
+        {
+          "name": "Check Duplicate",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"table\": \"users\",\n  \"field\": \"email\",\n  \"value\": \"user@example.com\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/check-duplicate",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "check-duplicate"]
+            }
+          }
+        },
+        {
+          "name": "Check OTP",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"user@example.com\",\n  \"code\": \"123456\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/check-otp",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "check-otp"]
+            }
+          }
+        },
+        {
+          "name": "Get Client IP",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/get-ip",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "get-ip"]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

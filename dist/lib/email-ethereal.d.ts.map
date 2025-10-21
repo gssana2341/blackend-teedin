@@ -1,0 +1,1 @@
+{"version":3,"file":"email-ethereal.d.ts","sourceRoot":"","sources":["../../src/lib/email-ethereal.ts"],"names":[],"mappings":"AAsGA,eAAO,MAAM,YAAY,GACvB,IAAI,MAAM,EACV,SAAS,MAAM,KACd,OAAO,CAAC;IACT,OAAO,EAAE,OAAO,CAAC;IACjB,KAAK,CAAC,EAAE,MAAM,CAAC;IACf,QAAQ,CAAC,EAAE,MAAM,CAAC;IAClB,UAAU,CAAC,EAAE,MAAM,CAAC;CACrB,CAmEA,CAAC;AAEF,eAAe,YAAY,CAAC"}
