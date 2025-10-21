@@ -1,142 +1,191 @@
 # 🔐 GitHub Secrets Setup Guide
 
-## ปัญหาที่พบ
+## **วิธีการตั้งค่า Repository Secrets**
+
+### **1. ไปที่ GitHub Repository Settings**
+
+1. เปิด repository ของคุณที่ GitHub
+2. คลิก **"Settings"** (tab ด้านบน)
+3. คลิก **"Secrets and variables"** → **"Actions"** (เมนูซ้าย)
+4. คลิก **"New repository secret"**
+
+---
+
+## **🔑 Secrets ที่ต้องเพิ่ม**
+
+### **Secret #1: SERVER_SSH_KEY**
+
+**ชื่อ Secret:** `SERVER_SSH_KEY`
+
+**วิธีการหา Value:**
+
+#### **บน Local Machine:**
+
+```bash
+# 1. เข้า SSH ไปที่ server
+ssh teedineasy_team@34.158.61.147
+
+# 2. สร้าง SSH key ใหม่บน server (ถ้ายังไม่มี)
+ssh-keygen -t rsa -b 4096 -C "github-actions@teedin"
+
+# กด Enter 3 ครั้ง (ไม่ต้องใส่ passphrase)
+# Key จะถูกสร้างที่ ~/.ssh/id_rsa
+
+# 3. เพิ่ม public key ลงใน authorized_keys
+cat ~/.ssh/id_rsa.pub >> ~/.ssh/authorized_keys
+chmod 600 ~/.ssh/authorized_keys
+
+# 4. แสดง PRIVATE KEY (เอาไปใส่ใน GitHub Secret)
+cat ~/.ssh/id_rsa
 ```
-ssh.ParsePrivateKey: ssh: no key found
-ssh: handshake failed: ssh: unable to authenticate
-```
 
-## วิธีแก้ไข
-
-### 1. ตรวจสอบ SSH Key ที่ถูกต้อง
-
-Private key ที่ต้องใช้:
+**Copy ทั้งหมด** รวมถึง:
 ```
 -----BEGIN OPENSSH PRIVATE KEY-----
-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
+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...
+[ข้อมูลยาว ๆ]
 -----END OPENSSH PRIVATE KEY-----
 ```
 
-### 2. เพิ่ม Secret ใน GitHub
+**⚠️ สิ่งที่ต้องระวัง:**
+- ต้อง copy **ทั้งหมด** รวม header และ footer
+- ต้องมี **newline** ที่บรรทัดสุดท้าย
+- **อย่า** share private key กับใครเด็ดขาด!
 
-1. ไปที่ `https://github.com/gssana2341/blackend-teedin/settings/secrets/actions`
-2. คลิก **New repository secret**
+---
+
+## **📝 ขั้นตอนการเพิ่ม Secret ใน GitHub**
+
+### **วิธีที่ 1: ผ่าน GitHub Web UI (แนะนำ)**
+
+1. ไปที่: `https://github.com/YOUR_USERNAME/YOUR_REPO/settings/secrets/actions`
+2. คลิก **"New repository secret"**
 3. Name: `SERVER_SSH_KEY`
-4. Value: **Copy private key ทั้งหมดจากด้านบน** (รวม `-----BEGIN` และ `-----END`)
-5. คลิก **Add secret**
+4. Value: Paste **PRIVATE KEY** ทั้งหมด (จากคำสั่ง `cat ~/.ssh/id_rsa`)
+5. คลิก **"Add secret"**
 
-### 3. ตรวจสอบ Format
+---
 
-**✅ ถูกต้อง:**
-- มี `-----BEGIN OPENSSH PRIVATE KEY-----`
-- มี `-----END OPENSSH PRIVATE KEY-----`
-- **ไม่มี** space หรือ tab เพิ่มเติม
-- **ไม่มี** newline เพิ่มเติมที่ท้าย
+## **🧪 ทดสอบว่า SSH Key ใช้งานได้**
 
-**❌ ผิด:**
-- ไม่มี `-----BEGIN` หรือ `-----END`
-- มี space หรือ tab ข้างหน้า
-- มี newline เพิ่มเติม
-- Copy ไม่ครบ
-
-### 4. ทดสอบ SSH Connection
+### **บน Local Machine:**
 
 ```bash
-# ทดสอบ SSH
-ssh -i ~/.ssh/github_actions_key teedineasy_team@34.158.61.147 "echo 'Success!'"
+# 1. สร้างไฟล์ test_key (paste private key ที่ได้จากข้างบน)
+nano test_key
+
+# 2. ตั้งค่า permission
+chmod 600 test_key
+
+# 3. ทดสอบ SSH
+ssh -i test_key teedineasy_team@34.158.61.147
+
+# ถ้าเข้าได้โดยไม่ต้องใส่ password = ✅ สำเร็จ!
 ```
 
-### 5. ตรวจสอบ GitHub Actions
+---
 
-หลังจากเพิ่ม secret:
-1. ไปที่ **Actions** tab
-2. คลิก workflow ล่าสุด
-3. ดู logs ว่ามี error หรือไม่
+## **🔧 แก้ไขปัญหา**
 
-### 6. Troubleshooting
+### **ปัญหา: "Permission denied (publickey)"**
 
-#### ถ้ายังมี error:
+**วิธีแก้:**
 
-**Option 1: ใช้ key_path แทน**
-```yaml
-- name: Setup SSH
-  run: |
-    mkdir -p ~/.ssh
-    echo "${{ secrets.SERVER_SSH_KEY }}" > ~/.ssh/deploy_key
-    chmod 600 ~/.ssh/deploy_key
+```bash
+# 1. SSH เข้า server
+ssh teedineasy_team@34.158.61.147
 
-- name: Deploy
-  uses: appleboy/ssh-action@v1.0.0
-  with:
-    host: 34.158.61.147
-    username: teedineasy_team
-    key_path: ~/.ssh/deploy_key
+# 2. ตรวจสอบ permissions
+ls -la ~/.ssh/
+
+# 3. แก้ไข permissions ที่ถูกต้อง
+chmod 700 ~/.ssh
+chmod 600 ~/.ssh/authorized_keys
+chmod 600 ~/.ssh/id_rsa
+chmod 644 ~/.ssh/id_rsa.pub
+
+# 4. ตรวจสอบว่า public key อยู่ใน authorized_keys
+cat ~/.ssh/authorized_keys
+
+# 5. ถ้าไม่มี ให้เพิ่ม
+cat ~/.ssh/id_rsa.pub >> ~/.ssh/authorized_keys
 ```
 
-**Option 2: ใช้ rsync deployment**
-```yaml
-- name: Deploy
-  run: |
-    echo "${{ secrets.SERVER_SSH_KEY }}" > ~/.ssh/deploy_key
-    chmod 600 ~/.ssh/deploy_key
-    ssh -i ~/.ssh/deploy_key teedineasy_team@34.158.61.147 "
-      cd ~/teedin-backend &&
-      git pull origin main &&
-      sudo docker-compose -f docker-compose.prod.yml up -d --build
-    "
+---
+
+### **ปัญหา: "ssh: handshake failed: ssh: unable to authenticate"**
+
+**สาเหตุที่เป็นไปได้:**
+1. ❌ Private key ใน GitHub Secret ไม่ถูกต้อง
+2. ❌ Public key ไม่อยู่ใน `~/.ssh/authorized_keys` บน server
+3. ❌ Permission ของ `.ssh` หรือ `authorized_keys` ผิด
+
+**วิธีแก้:**
+```bash
+# บน Server:
+# 1. ตรวจสอบว่า public key อยู่ใน authorized_keys
+cat ~/.ssh/authorized_keys | grep github-actions
+
+# 2. ถ้าไม่มี ให้เพิ่ม
+cat ~/.ssh/id_rsa.pub >> ~/.ssh/authorized_keys
+
+# 3. ตรวจสอบ permission
+chmod 700 ~/.ssh
+chmod 600 ~/.ssh/authorized_keys
+
+# 4. Copy private key ใหม่ไปใส่ใน GitHub Secret
+cat ~/.ssh/id_rsa
 ```
 
-## สรุป
+---
 
-1. ✅ SSH key มีอยู่ใน server แล้ว
-2. ⚠️ GitHub Secret ต้องตั้งค่าให้ถูกต้อง
-3. 🔧 ใช้ private key ที่แสดงด้านบน
-4. 🚀 Deploy อัตโนมัติหลัง push
+## **✅ Checklist การตั้งค่า**
 
-**หลังจากตั้งค่า secret แล้ว ให้ push code ใหม่เพื่อทดสอบ!**
+- [ ] สร้าง SSH key บน server แล้ว (`ssh-keygen`)
+- [ ] เพิ่ม public key ลงใน `~/.ssh/authorized_keys`
+- [ ] Permission ถูกต้อง (700 สำหรับ `.ssh`, 600 สำหรับ `authorized_keys`)
+- [ ] Copy **PRIVATE KEY** ทั้งหมดไปใส่ใน GitHub Secret `SERVER_SSH_KEY`
+- [ ] ทดสอบ SSH จาก local ได้แล้ว (ไม่ต้องใส่ password)
+- [ ] Push code ไป GitHub และ Actions ทำงาน
+
+---
+
+## **🚀 ขั้นตอนสุดท้าย**
+
+หลังจากเพิ่ม Secrets แล้ว:
+
+1. ✅ Commit และ push code ใด ๆ ไป GitHub
+2. ✅ ไปดู Actions tab: `https://github.com/YOUR_USERNAME/YOUR_REPO/actions`
+3. ✅ ดูว่า Workflow ทำงานสำเร็จหรือไม่
+4. ✅ ถ้าสำเร็จ API จะพร้อมใช้งานที่ `http://34.158.61.147:3001`
+
+---
+
+## **🔍 วิธีดู Logs**
+
+### **บน GitHub Actions:**
+```
+GitHub → Your Repo → Actions → เลือก workflow run → คลิก job "deploy" → ดู logs
+```
+
+### **บน Server:**
+```bash
+# SSH เข้า server
+ssh teedineasy_team@34.158.61.147
+
+# ดู Docker logs
+cd ~/teedin-backend
+docker-compose -f docker-compose.prod.yml logs -f
+```
+
+---
+
+## **📞 ติดปัญหา?**
+
+1. ตรวจสอบว่า SSH key format ถูกต้อง (ต้องมี header/footer)
+2. ตรวจสอบ permissions บน server
+3. ทดสอบ SSH จาก local machine ก่อน
+4. ดู logs ใน GitHub Actions
+5. ดู logs บน server (`docker-compose logs`)
+
+**Good luck! 🎉**
