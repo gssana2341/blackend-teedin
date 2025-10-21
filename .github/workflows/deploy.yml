@@ -36,7 +36,7 @@ jobs:
         uses: appleboy/ssh-action@v1.0.0
         with:
           host: 34.158.61.147
-          username: gassana2341
+          username: teedineasy_team
           key: ${{ secrets.SERVER_SSH_KEY }}
           port: 22
           timeout: 60s
