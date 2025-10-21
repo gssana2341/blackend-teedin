@@ -5,6 +5,7 @@ import { sendSuccess, sendError } from '../lib/http-helpers';
 // Get all properties
 export async function getProperties(req: Request, res: Response) {
   try {
+    console.log('📋 Getting all properties...');
     const supabase = createClient(
       process.env.NEXT_PUBLIC_SUPABASE_URL!,
       process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!

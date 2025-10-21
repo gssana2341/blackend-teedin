@@ -20,5 +20,5 @@
     }
   },
   "include": ["src/**/*"],
-  "exclude": ["node_modules", "dist", "api", "lib"]
+  "exclude": ["node_modules", "dist", "src/ไม่ได้ใช้/api", "src/ไม่ได้ใช้/lib"]
 }
