@@ -8,11 +8,17 @@
     "dev": "tsx watch src/server.ts",
     "start": "node dist/server.js",
     "build": "tsc",
+    "type-check": "tsc --noEmit",
     "test": "node scripts/test-api.js",
     "setup-db": "node scripts/setup-database.js",
     "create-admin": "node scripts/create-super-admin.js",
     "check-db": "node scripts/check-database.js",
-    "check-users": "node scripts/check-users.js"
+    "check-users": "node scripts/check-users.js",
+    "docker:build": "docker build -t teedin-backend .",
+    "docker:run": "docker run -p 3001:3001 teedin-backend",
+    "docker:prod": "docker-compose -f docker-compose.prod.yml up -d",
+    "docker:down": "docker-compose -f docker-compose.prod.yml down",
+    "deploy": "powershell -ExecutionPolicy Bypass -File scripts/deploy.ps1"
   },
   "dependencies": {
     "@sendgrid/mail": "^8.1.5",
