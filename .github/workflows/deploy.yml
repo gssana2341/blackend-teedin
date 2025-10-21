@@ -54,11 +54,17 @@ jobs:
           script: |
             set -e
 
-            echo ">>> Navigating to backend folder..."
-            if [ ! -d "~/teedin-backend" ]; then
-              git clone https://github.com/gssana2341/blackend-teedin.git ~/teedin-backend
+            echo ">>> Installing Git if not installed..."
+            if ! command -v git &> /dev/null; then
+              sudo apt update
+              sudo apt install -y git
             fi
-            cd ~/teedin-backend
+
+            echo ">>> Navigating to backend folder..."
+            if [ ! -d "$HOME/teedin-backend" ]; then
+              git clone https://github.com/gssana2341/blackend-teedin.git $HOME/teedin-backend
+            fi
+            cd $HOME/teedin-backend
 
             echo ">>> Pulling latest code..."
             git fetch origin main
@@ -77,6 +83,12 @@ jobs:
               sudo chmod +x /usr/local/bin/docker-compose
             fi
 
+            echo ">>> Creating .env.production if not exists..."
+            if [ ! -f "$HOME/teedin-backend/.env.production" ]; then
+              cp $HOME/teedin-backend/env.production.example $HOME/teedin-backend/.env.production
+              echo "⚠️  Please update .env.production with your actual values!"
+            fi
+
             echo ">>> Restarting containers..."
             sudo docker-compose -f docker-compose.prod.yml down || true
             sudo docker-compose -f docker-compose.prod.yml build --no-cache
@@ -87,3 +99,6 @@ jobs:
 
             echo ">>> Checking container status..."
             sudo docker-compose -f docker-compose.prod.yml ps
+            
+            echo ">>> Deployment completed!"
+            echo "🎉 API is available at: http://34.158.61.147:3001"
