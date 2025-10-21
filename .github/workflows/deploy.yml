@@ -32,26 +32,7 @@ jobs:
       - name: Build project
         run: npm run build
 
-      - name: Create deployment archive
-        run: |
-          tar -czf deploy.tar.gz \
-            --exclude='node_modules' \
-            --exclude='.git' \
-            --exclude='dist' \
-            --exclude='.env*' \
-            --exclude='.github' \
-            --exclude='*.log' \
-            --exclude='.next' \
-            --exclude='coverage' \
-            --exclude='.vscode' \
-            --exclude='.idea' \
-            --exclude='*.tar.gz' \
-            --exclude='.DS_Store' \
-            --warning=no-file-changed \
-            .
-          ls -lh deploy.tar.gz
-
-      - name: Setup SSH and Deploy
+      - name: Deploy to Server
         env:
           SSH_PRIVATE_KEY: ${{ secrets.SERVER_SSH_KEY }}
         run: |
@@ -61,40 +42,34 @@ jobs:
           chmod 600 ~/.ssh/deploy_key
           ssh-keyscan -H 34.158.61.147 >> ~/.ssh/known_hosts
 
-          # Upload code
-          echo ">>> Uploading code to server..."
-          scp -i ~/.ssh/deploy_key deploy.tar.gz teedineasy_team@34.158.61.147:~/
-
           # Deploy on server
-          echo ">>> Deploying on server..."
+          echo ">>> Connecting to server and deploying..."
           ssh -i ~/.ssh/deploy_key teedineasy_team@34.158.61.147 << 'EOF'
             set -e
             
-            echo ">>> Extracting code..."
+            echo ">>> Navigating to project directory..."
             cd $HOME/teedin-backend
-            tar -xzf ~/deploy.tar.gz
-            rm ~/deploy.tar.gz
             
-            echo ">>> Creating .env.production if not exists..."
-            if [ ! -f ".env.production" ]; then
-              cp env.production.example .env.production
-              echo "⚠️  Created .env.production - Please update with your actual values!"
-            fi
+            echo ">>> Pulling latest code from GitHub..."
+            git pull origin main
             
             echo ">>> Stopping existing containers..."
-            docker-compose -f docker-compose.prod.yml down || true
+            docker compose -f docker-compose.prod.yml down || true
             
             echo ">>> Building Docker images..."
-            docker-compose -f docker-compose.prod.yml build --no-cache
+            docker compose -f docker-compose.prod.yml build --no-cache
             
             echo ">>> Starting containers..."
-            docker-compose -f docker-compose.prod.yml up -d
+            docker compose -f docker-compose.prod.yml up -d
             
             echo ">>> Waiting for services to start..."
             sleep 30
             
             echo ">>> Checking container status..."
-            docker-compose -f docker-compose.prod.yml ps
+            docker compose -f docker-compose.prod.yml ps
+            
+            echo ">>> Checking logs..."
+            docker compose -f docker-compose.prod.yml logs --tail=50 teedin-backend
             
             echo ">>> Deployment completed!"
             echo "🎉 API is available at: http://34.158.61.147:3001"
