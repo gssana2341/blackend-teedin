@@ -15,6 +15,18 @@ const PORT = process.env.PORT || 3001;
 app.use((0, cors_1.default)());
 app.use(express_1.default.json());
 app.use(express_1.default.urlencoded({ extended: true }));
+// Request logging middleware
+app.use((req, res, next) => {
+    const requestTimestamp = new Date().toISOString();
+    console.log(`[${requestTimestamp}] ${req.method} ${req.originalUrl} - ${req.ip}`);
+    // Log response when it finishes
+    res.on('finish', () => {
+        const responseTimestamp = new Date().toISOString();
+        const statusMessage = res.statusMessage || 'OK';
+        console.log(`[${responseTimestamp}] ${req.method} ${req.originalUrl} - ${res.statusCode} ${statusMessage}`);
+    });
+    next();
+});
 // Health check endpoint
 app.get('/health', (req, res) => {
     res.json({
@@ -45,11 +57,21 @@ app.use('*', (req, res) => {
         message: `Route ${req.originalUrl} not found`,
     });
 });
+// Global error handlers
+process.on('uncaughtException', (error) => {
+    console.error('🚨 Uncaught Exception:', error);
+    process.exit(1);
+});
+process.on('unhandledRejection', (reason, promise) => {
+    console.error('🚨 Unhandled Rejection at:', promise, 'reason:', reason);
+    process.exit(1);
+});
 // Start server
 app.listen(PORT, () => {
     console.log(`🚀 Teedin Backend API running on port ${PORT}`);
     console.log(`📊 Health check: http://localhost:${PORT}/health`);
     console.log(`📚 API docs: http://localhost:${PORT}/`);
+    console.log(`🔍 Logs will show all incoming requests and responses`);
 });
 exports.default = app;
 //# sourceMappingURL=server.js.map

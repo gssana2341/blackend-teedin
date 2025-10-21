@@ -12,6 +12,9 @@ const http_helpers_1 = require("../lib/http-helpers");
 // Get all properties
 async function getProperties(req, res) {
     try {
+        console.log('📋 Getting all properties...');
+        console.log('🔗 Supabase URL:', process.env.NEXT_PUBLIC_SUPABASE_URL ? 'Set' : 'Missing');
+        console.log('🔑 Supabase Key:', process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ? 'Set' : 'Missing');
         const supabase = (0, supabase_js_1.createClient)(process.env.NEXT_PUBLIC_SUPABASE_URL, process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY);
         const { data: properties, error } = await supabase
             .from('properties')
@@ -49,6 +52,22 @@ async function getProperties(req, res) {
         if (error) {
             console.error('Error fetching properties:', error);
             return (0, http_helpers_1.sendError)(res, 'Failed to fetch properties', 500);
+        }
+        // Set cache headers to prevent stale data
+        res.set({
+            'Cache-Control': 'no-cache, no-store, must-revalidate',
+            'Pragma': 'no-cache',
+            'Expires': '0'
+        });
+        console.log(`📊 Found ${properties?.length || 0} properties`);
+        // Log first property for debugging
+        if (properties && properties.length > 0) {
+            console.log('🏠 First property:', {
+                id: properties[0].id,
+                category: properties[0].property_category,
+                status: properties[0].status,
+                created_at: properties[0].created_at
+            });
         }
         return (0, http_helpers_1.sendSuccess)(res, properties || []);
     }

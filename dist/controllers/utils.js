@@ -10,6 +10,7 @@ exports.trackView = trackView;
 exports.checkDuplicate = checkDuplicate;
 exports.checkOTP = checkOTP;
 exports.getClientIP = getClientIP;
+exports.trackViewGet = trackViewGet;
 const supabase_js_1 = require("@supabase/supabase-js");
 const http_helpers_1 = require("../lib/http-helpers");
 // Send OTP via email
@@ -322,6 +323,63 @@ async function getClientIP(req, res) {
     }
     catch (error) {
         console.error("Error in getClientIP:", error);
+        return (0, http_helpers_1.sendError)(res, "Internal server error", 500);
+    }
+}
+// Track view with GET request (for frontend compatibility)
+async function trackViewGet(req, res) {
+    try {
+        const { propertyId } = req.query;
+        if (!propertyId) {
+            return (0, http_helpers_1.sendError)(res, "Property ID is required", 400);
+        }
+        const supabase = (0, supabase_js_1.createClient)(process.env.NEXT_PUBLIC_SUPABASE_URL, process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY);
+        // ตรวจสอบว่า propertyId เป็น UUID หรือไม่
+        const isUUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(propertyId);
+        if (!isUUID) {
+            // ถ้าไม่ใช่ UUID (เช่น "new-1", "new-2") ให้ return success โดยไม่ update database
+            return (0, http_helpers_1.sendSuccess)(res, {
+                message: "View tracked successfully (static property)",
+                propertyId: propertyId,
+                viewCount: 0,
+                note: "Static property - view count not tracked in database"
+            });
+        }
+        // อัพเดต view count - get current count first
+        const { data: currentData, error: fetchError } = await supabase
+            .from("property_details")
+            .select("view_count")
+            .eq("property_id", propertyId)
+            .single();
+        if (fetchError) {
+            console.error("Error fetching current view count:", fetchError);
+            // ถ้า property ไม่มี ให้ return success แต่ไม่ update
+            return (0, http_helpers_1.sendSuccess)(res, {
+                message: "Property not found, but request processed",
+                propertyId: propertyId,
+                viewCount: 0,
+                note: "Property does not exist in database"
+            });
+        }
+        const currentViewCount = currentData?.view_count || 0;
+        const newViewCount = currentViewCount + 1;
+        // Update view count
+        const { error: updateError } = await supabase
+            .from("property_details")
+            .update({ view_count: newViewCount })
+            .eq("property_id", propertyId);
+        if (updateError) {
+            console.error("Error updating view count:", updateError);
+            return (0, http_helpers_1.sendError)(res, "Failed to update view count", 500);
+        }
+        return (0, http_helpers_1.sendSuccess)(res, {
+            message: "View tracked successfully",
+            propertyId: propertyId,
+            viewCount: newViewCount,
+        });
+    }
+    catch (error) {
+        console.error("Error in trackViewGet:", error);
         return (0, http_helpers_1.sendError)(res, "Internal server error", 500);
     }
 }

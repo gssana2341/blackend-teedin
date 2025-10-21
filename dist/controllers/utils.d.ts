@@ -9,4 +9,5 @@ export declare function trackView(req: Request, res: Response): Promise<Response
 export declare function checkDuplicate(req: Request, res: Response): Promise<Response<any, Record<string, any>>>;
 export declare function checkOTP(req: Request, res: Response): Promise<Response<any, Record<string, any>>>;
 export declare function getClientIP(req: Request, res: Response): Promise<Response<any, Record<string, any>>>;
+export declare function trackViewGet(req: Request, res: Response): Promise<Response<any, Record<string, any>>>;
 //# sourceMappingURL=utils.d.ts.map
