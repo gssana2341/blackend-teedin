@@ -44,7 +44,7 @@ jobs:
         with:
           host: 34.158.61.147
           username: teedineasy_team
-          key_path: ~/.ssh/deploy_key
+          key_path: /home/runner/.ssh/deploy_key
           port: 22
           timeout: 60s
           command_timeout: 10m
