@@ -1,4 +1,4 @@
-import { Router } from 'express';
+import { Router, Request, Response } from 'express';
 import { asyncHandler } from '../lib/http-helpers';
 import { sendSuccess, sendError } from '../lib/http-helpers';
 import { createClient } from '@supabase/supabase-js';
@@ -42,7 +42,7 @@ router.post('/check-otp', asyncHandler(checkOTP));
 router.get('/get-ip', asyncHandler(getClientIP));
 
 // Test connection route
-router.get('/test-connection', asyncHandler(async (req, res) => {
+router.get('/test-connection', asyncHandler(async (req: Request, res: Response) => {
   try {
     const supabase = createClient(
       process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -70,7 +70,7 @@ router.get('/test-connection', asyncHandler(async (req, res) => {
 }));
 
 // Health check route
-router.get('/health', asyncHandler(async (req, res) => {
+router.get('/health', asyncHandler(async (req: Request, res: Response) => {
   try {
     return sendSuccess(res, {
       status: 'OK',
@@ -84,7 +84,7 @@ router.get('/health', asyncHandler(async (req, res) => {
 }));
 
 // Test route
-router.get('/test', asyncHandler(async (req, res) => {
+router.get('/test', asyncHandler(async (req: Request, res: Response) => {
   try {
     return sendSuccess(res, {
       message: 'Test endpoint working',
@@ -97,7 +97,7 @@ router.get('/test', asyncHandler(async (req, res) => {
 }));
 
 // Status route
-router.get('/status', asyncHandler(async (req, res) => {
+router.get('/status', asyncHandler(async (req: Request, res: Response) => {
   try {
     const supabase = createClient(
       process.env.NEXT_PUBLIC_SUPABASE_URL!,

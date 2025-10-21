@@ -1,4 +1,4 @@
-import { Router } from 'express';
+import { Router, Request, Response } from 'express';
 import { asyncHandler } from '../lib/http-helpers';
 import { sendSuccess, sendError } from '../lib/http-helpers';
 import { getCurrentUser, logoutUser, forceLogout } from '../controllers/auth';
@@ -11,7 +11,7 @@ router.post('/logout', asyncHandler(logoutUser));
 router.delete('/logout', asyncHandler(forceLogout));
 
 // Login route
-router.post('/login', asyncHandler(async (req, res) => {
+router.post('/login', asyncHandler(async (req: Request, res: Response) => {
   try {
     const { email, password } = req.body;
 
@@ -94,7 +94,7 @@ router.post('/login', asyncHandler(async (req, res) => {
 }));
 
 // Register route
-router.post('/register', asyncHandler(async (req, res) => {
+router.post('/register', asyncHandler(async (req: Request, res: Response) => {
   try {
     const { email, password, name } = req.body;
 
