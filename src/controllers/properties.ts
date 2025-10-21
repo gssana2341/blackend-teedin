@@ -6,6 +6,9 @@ import { sendSuccess, sendError } from '../lib/http-helpers';
 export async function getProperties(req: Request, res: Response) {
   try {
     console.log('📋 Getting all properties...');
+    console.log('🔗 Supabase URL:', process.env.NEXT_PUBLIC_SUPABASE_URL ? 'Set' : 'Missing');
+    console.log('🔑 Supabase Key:', process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ? 'Set' : 'Missing');
+    
     const supabase = createClient(
       process.env.NEXT_PUBLIC_SUPABASE_URL!,
       process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
@@ -50,6 +53,25 @@ export async function getProperties(req: Request, res: Response) {
       return sendError(res, 'Failed to fetch properties', 500);
     }
 
+    // Set cache headers to prevent stale data
+    res.set({
+      'Cache-Control': 'no-cache, no-store, must-revalidate',
+      'Pragma': 'no-cache',
+      'Expires': '0'
+    });
+
+    console.log(`📊 Found ${properties?.length || 0} properties`);
+    
+    // Log first property for debugging
+    if (properties && properties.length > 0) {
+      console.log('🏠 First property:', {
+        id: properties[0].id,
+        category: properties[0].property_category,
+        status: properties[0].status,
+        created_at: properties[0].created_at
+      });
+    }
+    
     return sendSuccess(res, properties || []);
   } catch (error) {
     console.error('Error in getProperties:', error);

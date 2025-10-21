@@ -16,12 +16,14 @@ app.use(express.urlencoded({ extended: true }));
 
 // Request logging middleware
 app.use((req, res, next) => {
-  const timestamp = new Date().toISOString();
-  console.log(`[${timestamp}] ${req.method} ${req.originalUrl} - ${req.ip}`);
+  const requestTimestamp = new Date().toISOString();
+  console.log(`[${requestTimestamp}] ${req.method} ${req.originalUrl} - ${req.ip}`);
   
   // Log response when it finishes
   res.on('finish', () => {
-    console.log(`[${timestamp}] ${req.method} ${req.originalUrl} - ${res.statusCode} ${res.statusMessage}`);
+    const responseTimestamp = new Date().toISOString();
+    const statusMessage = res.statusMessage || 'OK';
+    console.log(`[${responseTimestamp}] ${req.method} ${req.originalUrl} - ${res.statusCode} ${statusMessage}`);
   });
   
   next();
