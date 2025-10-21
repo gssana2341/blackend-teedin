@@ -39,6 +39,15 @@ jobs:
             --exclude='.git' \
             --exclude='dist' \
             --exclude='.env*' \
+            --exclude='.github' \
+            --exclude='*.log' \
+            --exclude='.next' \
+            --exclude='coverage' \
+            --exclude='.vscode' \
+            --exclude='.idea' \
+            --exclude='*.tar.gz' \
+            --exclude='.DS_Store' \
+            --warning=no-file-changed \
             .
           ls -lh deploy.tar.gz
 
@@ -51,11 +60,11 @@ jobs:
           echo "$SSH_PRIVATE_KEY" > ~/.ssh/deploy_key
           chmod 600 ~/.ssh/deploy_key
           ssh-keyscan -H 34.158.61.147 >> ~/.ssh/known_hosts
-          
+
           # Upload code
           echo ">>> Uploading code to server..."
           scp -i ~/.ssh/deploy_key deploy.tar.gz teedineasy_team@34.158.61.147:~/
-          
+
           # Deploy on server
           echo ">>> Deploying on server..."
           ssh -i ~/.ssh/deploy_key teedineasy_team@34.158.61.147 << 'EOF'
