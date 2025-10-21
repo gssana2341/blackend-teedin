@@ -50,12 +50,33 @@ jobs:
             echo ">>> Navigating to project directory..."
             cd $HOME/teedin-backend
             
-            echo ">>> Resetting local changes..."
+            echo ">>> Backing up .env files..."
+            if [ -f .env.production ]; then
+              cp .env.production .env.production.backup
+            fi
+            
+            echo ">>> Resetting local changes (excluding .env files)..."
             git reset --hard HEAD
-            git clean -fd
+            git clean -fd -e '.env*' -e 'logs/' -e 'ssl/'
+            
+            echo ">>> Restoring .env files..."
+            if [ -f .env.production.backup ]; then
+              mv .env.production.backup .env.production
+            fi
             
             echo ">>> Pulling latest code from GitHub..."
             git pull origin main
+            
+            echo ">>> Ensuring .env.production exists..."
+            if [ ! -f .env.production ]; then
+              echo "⚠️  .env.production not found! Creating from example..."
+              cp env.production.example .env.production
+              echo "❌ ERROR: Please configure .env.production with actual values!"
+              exit 1
+            fi
+            
+            echo ">>> Removing .env file if exists (use .env.production instead)..."
+            rm -f .env
             
             echo ">>> Stopping existing containers..."
             docker compose -f docker-compose.prod.yml down || true
